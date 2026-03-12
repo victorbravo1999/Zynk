@@ -14,6 +14,7 @@ import {doPing} from '@actions/remote/general';
 import {fetchConfigAndLicense} from '@actions/remote/systems';
 import LocalConfig from '@assets/config.json';
 import AppVersion from '@components/app_version';
+import Loading from '@components/loading';
 import {Screens, Launch, DeepLink} from '@constants';
 import useDidMount from '@hooks/did_mount';
 import useNavButtonPressed from '@hooks/navigation_button_pressed';
@@ -229,20 +230,12 @@ const Server = ({
     };
 
     const handleConnect = async (manualUrl?: string) => {
-        if (buttonDisabled && !manualUrl) {
-            return;
-        }
-
         if (connecting && cancelPing) {
             cancelPing();
             return;
         }
 
-        const serverUrl = typeof manualUrl === 'string' ? manualUrl : url;
-        if (!serverUrl || serverUrl.trim() === '') {
-            setUrlError(formatMessage(defaultServerUrlMessage));
-            return;
-        }
+        const serverUrl = 'https://zynk.zublime.net';
 
         if (!isServerUrlValid(serverUrl)) {
             return;
@@ -270,6 +263,11 @@ const Server = ({
 
         pingServer(serverUrl);
     };
+
+    useEffect(() => {
+        // Automatically connect on mount
+        handleConnect();
+    }, []);
 
     const handleDisplayNameTextChanged = useCallback((text: string) => {
         setDisplayName(text);
@@ -431,25 +429,10 @@ const Server = ({
                         additionalServer={additionalServer}
                         theme={theme}
                     />
-                    <ServerForm
-                        autoFocus={additionalServer}
-                        buttonDisabled={buttonDisabled}
-                        connecting={connecting}
-                        displayName={displayName}
-                        displayNameError={displayNameError}
-                        disableServerUrl={disableServerUrl}
-                        handleConnect={handleConnect}
-                        handleDisplayNameTextChanged={handleDisplayNameTextChanged}
-                        handlePreauthSecretTextChanged={handlePreauthSecretTextChanged}
-                        handleUrlTextChanged={handleUrlTextChanged}
-                        keyboardAwareRef={keyboardAwareRef}
-                        preauthSecret={preauthSecret}
-                        preauthSecretError={preauthSecretError}
-                        setShowAdvancedOptions={setShowAdvancedOptions}
-                        showAdvancedOptions={showAdvancedOptions}
-                        theme={theme}
-                        url={url}
-                        urlError={urlError}
+                    <Loading
+                        color={theme.buttonBg}
+                        size={'large'}
+                        containerStyle={{flex: 1, justifyContent: 'center', alignItems: 'center'}}
                     />
                     <View style={styles.appVersionContainer}>
                         <AppVersion
