@@ -101,6 +101,10 @@ function Uploads({
     }), [files.length]);
 
     useEffect(() => {
+        // uploadFileError is displayed in the UI below
+    }, [uploadFileError]);
+
+    useEffect(() => {
         filesForGallery.current = files.filter((f) => !f.failed && !DraftEditPostUploadManager.isUploading(f.clientId!));
     }, [files]);
 

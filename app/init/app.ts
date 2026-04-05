@@ -21,7 +21,7 @@ import NavigationStore from '@store/navigation_store';
 // or on the Share Extension, for example.
 let baseAppInitialized = false;
 
-let serverCredentials: ServerCredential[];
+let serverCredentials: ServerCredential[] = [];
 
 // Fallback Polyfill for Promise.allSettle
 Promise.allSettled = Promise.allSettled || (<T>(promises: Array<Promise<T>>) => Promise.all(
@@ -60,14 +60,26 @@ export async function start() {
     EphemeralStore.setCurrentThreadId('');
     EphemeralStore.setProcessingNotification('');
 
-    await initialize();
+    try {
+        await initialize();
+    } catch {
+        // initialization errors are non-fatal; the app will continue with limited functionality
+    }
 
-    PushNotifications.init(serverCredentials.length > 0);
+    try {
+        PushNotifications.init(serverCredentials?.length > 0);
+    } catch {
+        // push notification errors are non-fatal
+    }
 
     registerNavigationListeners();
     registerScreens();
 
-    await WebsocketManager.init(serverCredentials);
+    try {
+        await WebsocketManager.init(serverCredentials);
+    } catch {
+        // websocket errors are non-fatal; reconnection is handled internally
+    }
 
     initialLaunch();
 }

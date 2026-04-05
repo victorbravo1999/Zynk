@@ -1,7 +1,7 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
 
-import {toMilliseconds} from '@utils/datetime';
+import {UPLOAD_TIMEOUT} from '@constants/network';
 
 import type ClientBase from './base';
 import type {ClientResponse, ClientResponseError, ProgressPromise, UploadRequestOptions} from '@mattermost/react-native-network-client';
@@ -80,7 +80,7 @@ const ClientFiles = <TBase extends Constructor<ClientBase>>(superclass: TBase) =
                     channel_id: channelId,
                 },
             },
-            timeoutInterval: toMilliseconds({minutes: 3}),
+            timeoutInterval: UPLOAD_TIMEOUT,
             headers: this.getRequestHeaders('POST'),
         };
         if (!file.localPath) {

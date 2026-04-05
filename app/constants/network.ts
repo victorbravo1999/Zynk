@@ -11,6 +11,7 @@ export const CERTIFICATE_ERRORS = keyMirror({
 });
 
 export const DOWNLOAD_TIMEOUT = toMilliseconds({minutes: 10});
+export const UPLOAD_TIMEOUT = toMilliseconds({minutes: 20});
 
 export default {
     CERTIFICATE_ERRORS,

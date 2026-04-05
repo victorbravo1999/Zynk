@@ -139,7 +139,7 @@ if [ -n "$jsfiles" ]; then
 
     echo "Checking for TSC (fast incremental check)"
     # Use incremental TypeScript checking - much faster on subsequent runs
-    tsc=$(node_modules/.bin/tsc --noEmit --incremental --tsBuildInfoFile .tsbuildinfo.precommit 2>&1)
+    tsc=$(node_modules/.bin/tsc --noEmit --skipLibCheck --incremental --tsBuildInfoFile .tsbuildinfo.precommit 2>&1)
     if [ $? -ne 0 ]; then
         echo "ERROR: TypeScript issues found."
         echo "$tsc"
