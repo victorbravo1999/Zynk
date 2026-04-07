@@ -10,7 +10,7 @@ import {Navigation} from 'react-native-navigation';
 
 import {start} from './app/init/app';
 import setFontFamily from './app/utils/font_family';
-import {logInfo} from './app/utils/log';
+import {logInfo, logError} from './app/utils/log';
 
 declare const global: { HermesInternal: null | {} };
 
@@ -62,5 +62,9 @@ if (Platform.OS === 'android') {
 }
 
 Navigation.events().registerAppLaunchedListener(async () => {
-    start();
+    try {
+        await start();
+    } catch (error) {
+        logError('App launch failed:', error);
+    }
 });
